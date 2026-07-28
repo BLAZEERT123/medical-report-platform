@@ -1,6 +1,5 @@
 # Medical Report Intelligence Platform
 
-🤖 **AI Agent Powered:** This project includes a custom AI agent skill (`.agents/skills/run_medIntel`)! If you are using this inside an agentic IDE, simply ask your assistant to *"run"*, *"launch"*, or *"start the app"*, and it will automatically spin up the entire FastAPI backend and Vite React frontend without any manual terminal commands.
 
 A production-quality medical report analysis platform that extracts structured clinical data from uploaded PDFs and images, explains findings in plain language, and answers follow-up questions with grounded, cited responses. It combines information from your personal report data with trusted medical references (like MedlinePlus and WHO).
 
