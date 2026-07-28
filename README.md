@@ -1,8 +1,17 @@
 # Medical Report Intelligence Platform
 
+🤖 **AI Agent Powered:** This project includes a custom AI agent skill (`.agents/skills/run_medIntel`)! If you are using this inside an agentic IDE, simply ask your assistant to *"run"*, *"launch"*, or *"start the app"*, and it will automatically spin up the entire FastAPI backend and Vite React frontend without any manual terminal commands.
+
 A production-quality medical report analysis platform that extracts structured clinical data from uploaded PDFs and images, explains findings in plain language, and answers follow-up questions with grounded, cited responses. It combines information from your personal report data with trusted medical references (like MedlinePlus and WHO).
 
 It exists to help patients quickly understand their medical reports, translating complex medical jargon into easy-to-understand explanations while highlighting critical or abnormal values, without relying on LLMs to make medical decisions.
+
+## Screenshots
+
+![Platform Overview](frontend-web/src/assets/hero.png)
+*(A quick look at the MedIntel platform)*
+
+> **Note:** For a complete visual experience, you can add more screenshots of the Q&A interface and the Longitudinal Trends dashboard here.
 
 ## Table of Contents
 - [Features](#features)
@@ -20,6 +29,7 @@ It exists to help patients quickly understand their medical reports, translating
 - **Rule-based Flagging:** Uses pure Python logic (not LLMs) to accurately flag results as NORMAL, BORDERLINE, ABNORMAL, or CRITICAL.
 - **Plain-language Summary:** An LLM narrates and explains pre-computed flagged findings in easy-to-understand language.
 - **Hybrid RAG Q&A:** Retrieves context from a personal report store and a medical reference store (MedlinePlus/WHO) to answer questions.
+- **Longitudinal Trend Analysis:** Track changes in your biomarker levels (like HbA1c, Cholesterol, etc.) across multiple reports over time using interactive visualizations.
 - **Retrieval Inspector:** See the exact chunks retrieved from both vector stores before the LLM generates an answer.
 - **Citation Grounding:** Every generated answer cites its sources inline.
 - **Guardrails:** Refuses to answer if no context is found, ensuring it doesn't hallucinate medical advice.
