@@ -115,3 +115,53 @@ class TestFlagReport:
         )
         flagged = flag_report(report)
         assert has_critical_values(flagged) is False
+
+
+class TestFalseCriticalRegressions:
+    """
+    Regression tests for the false-critical bug:
+    A value within the lab's own stated reference range must NEVER be CRITICAL,
+    even if it crosses an absolute threshold designed for standard ranges.
+    """
+
+    def test_hb_within_lab_range_not_critical(self):
+        """Hb = 6.8 in range 6.0–9.0 (e.g. paediatric/anaemia scale) → NORMAL, not CRITICAL."""
+        t = TestResult(name="Hb", value=6.8, unit="g/dL", reference_range="6.0-9.0")
+        result = flag_test(t)
+        assert result.status == TestStatus.NORMAL
+
+    def test_glucose_within_lab_range_not_critical(self):
+        """Glucose = 45 in range 40–110 (lab with wider low cutoff) → NORMAL, not CRITICAL."""
+        t = TestResult(name="Glucose", value=45.0, unit="mg/dL", reference_range="40.0-110.0")
+        result = flag_test(t)
+        assert result.status == TestStatus.NORMAL
+
+    def test_hemoglobin_within_lab_range_not_critical(self):
+        """Hemoglobin = 6.9 in range 6.5–9.0 → NORMAL, not CRITICAL."""
+        t = TestResult(name="Hemoglobin", value=6.9, unit="g/dL", reference_range="6.5-9.0")
+        result = flag_test(t)
+        assert result.status == TestStatus.NORMAL
+
+    def test_potassium_within_lab_range_not_critical(self):
+        """Potassium = 2.4 in lab range 2.0–5.5 → NORMAL, not CRITICAL."""
+        t = TestResult(name="Potassium", value=2.4, unit="mEq/L", reference_range="2.0-5.5")
+        result = flag_test(t)
+        assert result.status == TestStatus.NORMAL
+
+    def test_sodium_within_lab_range_not_critical(self):
+        """Sodium = 118 in lab range 115–145 → NORMAL, not CRITICAL."""
+        t = TestResult(name="Sodium", value=118.0, unit="mEq/L", reference_range="115-145")
+        result = flag_test(t)
+        assert result.status == TestStatus.NORMAL
+
+    def test_hb_below_lab_range_and_critical_threshold_is_critical(self):
+        """Hb = 5.5 below range 7.0–10.0 AND below critical threshold 7.0 → still CRITICAL."""
+        t = TestResult(name="Hemoglobin", value=5.5, unit="g/dL", reference_range="7.0-10.0")
+        result = flag_test(t)
+        assert result.status == TestStatus.CRITICAL
+
+    def test_glucose_below_lab_range_and_critical_threshold_is_critical(self):
+        """Glucose = 40 below range 70–100 AND below critical threshold 50 → CRITICAL."""
+        t = TestResult(name="Glucose", value=40.0, unit="mg/dL", reference_range="70-100")
+        result = flag_test(t)
+        assert result.status == TestStatus.CRITICAL

@@ -33,9 +33,16 @@ html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
 
-/* ── Dark glassmorphism background ── */
+/* ── Animated Mesh Gradient Background ── */
+@keyframes mesh {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
 .stApp {
-    background: linear-gradient(135deg, #0a0e1a 0%, #0d1b2a 40%, #0a1628 70%, #0e1320 100%);
+    background: linear-gradient(135deg, #050B14 0%, #081221 25%, #051421 50%, #10061E 75%, #050B14 100%);
+    background-size: 400% 400%;
+    animation: mesh 20s ease infinite;
     min-height: 100vh;
 }
 
@@ -44,210 +51,237 @@ html, body, [class*="css"] {
 
 /* ── Sidebar ── */
 [data-testid="stSidebar"] {
-    background: rgba(10, 20, 40, 0.85) !important;
-    border-right: 1px solid rgba(64, 150, 255, 0.15);
-    backdrop-filter: blur(20px);
+    background: rgba(5, 11, 20, 0.7) !important;
+    border-right: 1px solid rgba(0, 240, 255, 0.1);
+    backdrop-filter: blur(24px);
 }
 
-/* ── Custom card ── */
+/* ── Custom card with Glassmorphism ── */
 .med-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(100,160,255,0.15);
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.2);
     border-radius: 16px;
     padding: 1.5rem;
     margin-bottom: 1rem;
-    backdrop-filter: blur(10px);
-    transition: border-color 0.2s ease;
+    backdrop-filter: blur(24px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .med-card:hover {
-    border-color: rgba(100,160,255,0.35);
+    border-color: rgba(0, 240, 255, 0.3);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 32px rgba(0, 240, 255, 0.15);
+    transform: translateY(-4px);
 }
 
 /* ── Test result badges ── */
 .badge {
     display: inline-block;
-    padding: 3px 10px;
+    padding: 4px 12px;
     border-radius: 20px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-.badge-normal   { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
-.badge-borderline { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
-.badge-abnormal { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
-.badge-critical { background: rgba(220,38,38,0.3); color: #ff6b6b; border: 1px solid rgba(220,38,38,0.6);
+.badge-normal   { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.4); }
+.badge-borderline { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); }
+.badge-abnormal { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
+.badge-critical { background: rgba(220,38,38,0.2); color: #ff6b6b; border: 1px solid rgba(220,38,38,0.8);
                   animation: pulse 1.5s infinite; }
-.badge-unknown  { background: rgba(156,163,175,0.2); color: #9ca3af; border: 1px solid rgba(156,163,175,0.3); }
+.badge-unknown  { background: rgba(156,163,175,0.15); color: #9ca3af; border: 1px solid rgba(156,163,175,0.4); }
 
 @keyframes pulse {
     0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.4); }
-    50% { box-shadow: 0 0 0 6px rgba(220,38,38,0); }
+    50% { box-shadow: 0 0 0 8px rgba(220,38,38,0); }
 }
 
 /* ── Urgency banner ── */
 .urgency-banner {
-    background: linear-gradient(135deg, rgba(220,38,38,0.3), rgba(185,28,28,0.2));
-    border: 1.5px solid rgba(239,68,68,0.6);
+    background: linear-gradient(135deg, rgba(220,38,38,0.2), rgba(185,28,28,0.1));
+    border: 1.5px solid rgba(239,68,68,0.8);
     border-radius: 12px;
     padding: 1rem 1.5rem;
     margin-bottom: 1rem;
+    box-shadow: 0 4px 20px rgba(239,68,68,0.2);
     animation: borderPulse 2s infinite;
 }
 @keyframes borderPulse {
-    0%,100% { border-color: rgba(239,68,68,0.6); }
-    50% { border-color: rgba(239,68,68,1.0); }
+    0%,100% { border-color: rgba(239,68,68,0.5); box-shadow: 0 4px 20px rgba(239,68,68,0.1); }
+    50% { border-color: rgba(239,68,68,1.0); box-shadow: 0 4px 20px rgba(239,68,68,0.4); }
 }
 
 /* ── OCR warning ── */
 .ocr-warning {
-    background: rgba(245,158,11,0.15);
-    border: 1px solid rgba(245,158,11,0.4);
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.5);
     border-radius: 10px;
     padding: 0.75rem 1.25rem;
     margin-bottom: 1rem;
+    backdrop-filter: blur(8px);
 }
 
 /* ── Retrieval inspector chunks ── */
 .chunk-report {
-    background: rgba(59,130,246,0.08);
-    border-left: 3px solid #3b82f6;
-    border-radius: 0 8px 8px 0;
-    padding: 0.75rem 1rem;
+    background: rgba(0, 240, 255, 0.05);
+    border-left: 3px solid #00F0FF;
+    border-radius: 0 12px 12px 0;
+    padding: 1rem;
     margin-bottom: 0.5rem;
     font-size: 13px;
+    transition: all 0.2s;
 }
+.chunk-report:hover { background: rgba(0, 240, 255, 0.08); }
 .chunk-reference {
-    background: rgba(16,185,129,0.08);
-    border-left: 3px solid #10b981;
-    border-radius: 0 8px 8px 0;
-    padding: 0.75rem 1rem;
+    background: rgba(112, 0, 255, 0.05);
+    border-left: 3px solid #7000FF;
+    border-radius: 0 12px 12px 0;
+    padding: 1rem;
     margin-bottom: 0.5rem;
     font-size: 13px;
+    transition: all 0.2s;
 }
+.chunk-reference:hover { background: rgba(112, 0, 255, 0.08); }
 .chunk-label {
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
-.chunk-label-report { color: #60a5fa; }
-.chunk-label-ref { color: #34d399; }
+.chunk-label-report { color: #00F0FF; }
+.chunk-label-ref { color: #b785ff; }
 .score-pill {
     display: inline-block;
     font-size: 10px;
-    padding: 1px 8px;
+    padding: 2px 10px;
     border-radius: 20px;
-    background: rgba(255,255,255,0.08);
-    color: #94a3b8;
-    margin-top: 4px;
+    background: rgba(255,255,255,0.1);
+    color: #e2e8f0;
+    margin-top: 6px;
+    font-weight: 600;
 }
 
-/* ── Summary box ── */
-.summary-box {
-    background: rgba(99,102,241,0.08);
-    border: 1px solid rgba(99,102,241,0.25);
-    border-radius: 12px;
-    padding: 1.25rem;
-    line-height: 1.7;
+/* ── Summary & Answer box ── */
+.summary-box, .answer-box {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 1.5rem;
+    line-height: 1.8;
     color: #e2e8f0;
     font-size: 14px;
-}
-
-/* ── Answer box ── */
-.answer-box {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(100,160,255,0.2);
-    border-radius: 12px;
-    padding: 1.25rem 1.5rem;
-    line-height: 1.75;
-    color: #e2e8f0;
-    font-size: 14px;
+    backdrop-filter: blur(12px);
 }
 
 /* ── Metric override ── */
 [data-testid="stMetric"] {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(100,160,255,0.12);
-    border-radius: 12px;
-    padding: 0.75rem 1rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 1rem;
+    backdrop-filter: blur(12px);
+    transition: all 0.3s;
+}
+[data-testid="stMetric"]:hover {
+    border-color: rgba(0, 240, 255, 0.3);
+    transform: translateY(-2px);
 }
 
 /* ── Tab styling ── */
 .stTabs [data-baseweb="tab-list"] {
-    background: rgba(255,255,255,0.04);
-    border-radius: 10px;
-    padding: 4px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 6px;
+    border: 1px solid rgba(255,255,255,0.05);
 }
 .stTabs [data-baseweb="tab"] {
     border-radius: 8px;
     color: #94a3b8;
+    transition: all 0.3s;
 }
 .stTabs [aria-selected="true"] {
-    background: rgba(99,102,241,0.25) !important;
-    color: #a5b4fc !important;
+    background: rgba(255,255,255,0.1) !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 /* ── Buttons ── */
 .stButton>button {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    color: white;
+    background: linear-gradient(135deg, #00F0FF, #0080FF);
+    color: #050B14 !important;
     border: none;
-    border-radius: 10px;
-    font-weight: 600;
+    border-radius: 12px;
+    font-weight: 700;
     padding: 0.6rem 1.5rem;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
 }
 .stButton>button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 25px rgba(99,102,241,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 240, 255, 0.5);
+    background: linear-gradient(135deg, #00ffff, #0099ff);
 }
 
 /* ── File uploader ── */
 [data-testid="stFileUploader"] {
-    background: rgba(255,255,255,0.03);
-    border: 2px dashed rgba(99,102,241,0.4);
-    border-radius: 14px;
+    background: rgba(0, 240, 255, 0.02);
+    border: 2px dashed rgba(0, 240, 255, 0.3);
+    border-radius: 16px;
+    transition: all 0.3s;
+}
+[data-testid="stFileUploader"]:hover {
+    border-color: rgba(0, 240, 255, 0.6);
+    background: rgba(0, 240, 255, 0.05);
 }
 
 /* ── Headings ── */
-h1, h2, h3 { font-family: 'Outfit', sans-serif; color: #e2e8f0; }
-h1 { font-size: 2rem; }
-h2 { font-size: 1.4rem; color: #94a3b8; font-weight: 600; }
+h1, h2, h3 { font-family: 'Outfit', sans-serif; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+h1 { font-size: 2.5rem; }
+h2 { font-size: 1.6rem; color: #e2e8f0; font-weight: 700; }
+
 /* ── Chat message overrides ── */
 [data-testid="stChatMessage"] {
-    background: rgba(255,255,255,0.03) !important;
-    border: 1px solid rgba(100,160,255,0.1) !important;
-    border-radius: 12px !important;
-    padding: 0.75rem 1rem !important;
-    margin-bottom: 0.5rem !important;
+    background: rgba(255,255,255,0.02) !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    border-radius: 16px !important;
+    padding: 1rem 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    backdrop-filter: blur(12px);
+}
+[data-testid="stChatMessage"]:nth-child(even) {
+    background: rgba(0, 240, 255, 0.03) !important;
+    border-color: rgba(0, 240, 255, 0.1) !important;
 }
 
 /* ── Confidence badges ── */
-.conf-high   { background: rgba(16,185,129,0.2); color: #34d399;
-               border: 1px solid rgba(16,185,129,0.35); border-radius: 20px;
-               padding: 2px 10px; font-size: 11px; font-weight: 700; }
-.conf-medium { background: rgba(245,158,11,0.2); color: #fbbf24;
-               border: 1px solid rgba(245,158,11,0.35); border-radius: 20px;
-               padding: 2px 10px; font-size: 11px; font-weight: 700; }
+.conf-high   { background: rgba(16,185,129,0.15); color: #34d399;
+               border: 1px solid rgba(16,185,129,0.4); border-radius: 20px;
+               padding: 4px 12px; font-size: 11px; font-weight: 700; }
+.conf-medium { background: rgba(245,158,11,0.15); color: #fbbf24;
+               border: 1px solid rgba(245,158,11,0.4); border-radius: 20px;
+               padding: 4px 12px; font-size: 11px; font-weight: 700; }
 .conf-low    { background: rgba(239,68,68,0.15); color: #f87171;
-               border: 1px solid rgba(239,68,68,0.3); border-radius: 20px;
-               padding: 2px 10px; font-size: 11px; font-weight: 700; }
+               border: 1px solid rgba(239,68,68,0.4); border-radius: 20px;
+               padding: 4px 12px; font-size: 11px; font-weight: 700; }
 
 /* ── Quick-start question buttons ── */
 .stButton>button.quick-btn {
-    background: rgba(99,102,241,0.12) !important;
-    border: 1px solid rgba(99,102,241,0.3) !important;
-    color: #a5b4fc !important;
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    color: #cbd5e1 !important;
     font-size: 12px !important;
-    padding: 0.4rem 0.75rem !important;
-    border-radius: 8px !important;
-    transition: all 0.2s ease;
+    padding: 0.5rem 1rem !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
 }
 .stButton>button.quick-btn:hover {
-    background: rgba(99,102,241,0.25) !important;
-    transform: none !important;
-    box-shadow: none !important;
+    background: rgba(0, 240, 255, 0.1) !important;
+    border-color: rgba(0, 240, 255, 0.3) !important;
+    color: #00F0FF !important;
+    transform: translateY(-2px) !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -517,7 +551,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3 = st.tabs(["📤  Upload & Analyze", "💬  Q&A with Sources", "📊  Trends"])
+tab1, tab2, tab3, tab4 = st.tabs(["📤  Upload & Analyze", "💬  Q&A with Sources", "📊  Report Stats", "📈 Longitudinal Trends"])
 
 # ════════════════════════════════════════════════════════════════════════
 # TAB 1: Upload & Analyze
@@ -953,19 +987,19 @@ with tab3:
             fig_pie = go.Figure(go.Pie(
                 labels=list(type_counts.keys()),
                 values=list(type_counts.values()),
-                hole=0.5,
+                hole=0.6,
                 marker=dict(
-                    colors=["#4f46e5", "#7c3aed", "#10b981", "#f59e0b",
-                            "#ef4444", "#60a5fa", "#34d399", "#a78bfa"],
+                    colors=["#00F0FF", "#7000FF", "#0080FF", "#10b981",
+                            "#f59e0b", "#ef4444", "#a78bfa", "#34d399"],
                 ),
             ))
             fig_pie.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)",
                 plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#94a3b8", size=12),
-                legend=dict(bgcolor="rgba(0,0,0,0)"),
+                font=dict(color="#cbd5e1", size=13),
+                legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color="#cbd5e1")),
                 margin=dict(t=20, b=20, l=0, r=0),
-                height=280,
+                height=300,
             )
             st.plotly_chart(fig_pie, use_container_width=True)
 
@@ -981,16 +1015,17 @@ with tab3:
                 x="uploaded_at",
                 y="count",
                 markers=True,
-                color_discrete_sequence=["#60a5fa"],
+                color_discrete_sequence=["#00F0FF"],
             )
+            fig_line.update_traces(fill='tozeroy', line=dict(shape='spline', width=3), marker=dict(size=8, color="#00F0FF", line=dict(color="#ffffff", width=1)))
             fig_line.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(10,20,40,0.4)",
-                font=dict(color="#94a3b8", size=12),
-                xaxis=dict(gridcolor="rgba(100,160,255,0.1)", title="Date"),
-                yaxis=dict(gridcolor="rgba(100,160,255,0.1)", title="Reports"),
+                plot_bgcolor="rgba(0,0,0,0)",
+                font=dict(color="#cbd5e1", size=13),
+                xaxis=dict(gridcolor="rgba(255,255,255,0.05)", title="Date"),
+                yaxis=dict(gridcolor="rgba(255,255,255,0.05)", title="Reports"),
                 margin=dict(t=20, b=20, l=0, r=0),
-                height=280,
+                height=300,
             )
             st.plotly_chart(fig_line, use_container_width=True)
 
@@ -1025,3 +1060,115 @@ with tab3:
         </table>
         </div>
         """, unsafe_allow_html=True)
+
+# ════════════════════════════════════════════════════════════════════════
+# TAB 4: Longitudinal Trends
+# ════════════════════════════════════════════════════════════════════════
+with tab4:
+    import plotly.express as px
+    import plotly.graph_objects as go
+    import pandas as pd
+
+    st.markdown("### 📈 Longitudinal Trend Analysis")
+    st.markdown(
+        '<p style="color:#64748b;font-size:13px;margin-bottom:1rem;">'
+        'Track specific biomarkers across multiple medical reports over time.</p>',
+        unsafe_allow_html=True,
+    )
+
+    # 1. Fetch unique patients
+    patients = api_get("/reports/patients") or []
+    
+    if not patients:
+        st.info("No patients found. Please upload some reports first.")
+    else:
+        # 2. Select patient
+        selected_patient = st.selectbox("👤 Select Patient", options=patients)
+        
+        if selected_patient:
+            # 3. Fetch trends for the patient
+            with st.spinner(f"Fetching trends for {selected_patient}..."):
+                trend_data = api_get(f"/reports/trends/{selected_patient}")
+                
+            if trend_data and "trends" in trend_data:
+                trends = trend_data["trends"]
+                
+                if not trends:
+                    st.info(f"No test results found for {selected_patient}.")
+                else:
+                    # 4. Select biomarkers
+                    available_tests = sorted(list(trends.keys()))
+                    
+                    # Pre-select up to 3 common ones if they exist, else first one
+                    default_tests = []
+                    for t in ["Hemoglobin", "Glucose, Fasting", "Cholesterol, Total"]:
+                        if t in available_tests:
+                            default_tests.append(t)
+                    if not default_tests and available_tests:
+                        default_tests = [available_tests[0]]
+                        
+                    selected_tests = st.multiselect(
+                        "🔬 Select Biomarkers to Track",
+                        options=available_tests,
+                        default=default_tests
+                    )
+                    
+                    if not selected_tests:
+                        st.warning("Please select at least one biomarker to view its trend.")
+                    else:
+                        # 5. Prepare data for charting
+                        chart_data = []
+                        for test_name in selected_tests:
+                            test_records = trends[test_name]
+                            for record in test_records:
+                                chart_data.append({
+                                    "Date": record["date"],
+                                    "Value": record["value"],
+                                    "Biomarker": test_name,
+                                    "Unit": record["unit"]
+                                })
+                                
+                        if chart_data:
+                            df_chart = pd.DataFrame(chart_data)
+                            df_chart["Date"] = pd.to_datetime(df_chart["Date"], errors='coerce')
+                            # Drop NaT
+                            df_chart = df_chart.dropna(subset=["Date"])
+                            df_chart = df_chart.sort_values(by="Date")
+                            
+                            # Create a rich Plotly chart
+                            fig = px.line(
+                                df_chart, 
+                                x="Date", 
+                                y="Value", 
+                                color="Biomarker", 
+                                markers=True,
+                                hover_data=["Unit"],
+                                title=f"Biomarker Trends for {selected_patient}"
+                            )
+                            fig.update_traces(fill='tozeroy', line=dict(shape='spline', width=4), marker=dict(size=10, line=dict(width=2, color="white")))
+                            fig.update_layout(
+                                paper_bgcolor="rgba(0,0,0,0)",
+                                plot_bgcolor="rgba(0,0,0,0)",
+                                font=dict(color="#cbd5e1"),
+                                xaxis=dict(gridcolor="rgba(255,255,255,0.05)", title="Date"),
+                                yaxis=dict(gridcolor="rgba(255,255,255,0.05)", title="Value"),
+                                hovermode="x unified",
+                                margin=dict(t=50, b=20, l=0, r=0),
+                            )
+                            st.plotly_chart(fig, use_container_width=True)
+                            
+                            # Show raw data table below
+                            with st.expander("Show Data Table"):
+                                df_pivot = df_chart.pivot_table(
+                                    index="Date", 
+                                    columns="Biomarker", 
+                                    values="Value"
+                                ).reset_index()
+                                df_pivot["Date"] = df_pivot["Date"].dt.strftime('%Y-%m-%d')
+                                st.dataframe(
+                                    df_pivot, 
+                                    use_container_width=True,
+                                    hide_index=True
+                                )
+            else:
+                st.error("Failed to fetch trend data.")

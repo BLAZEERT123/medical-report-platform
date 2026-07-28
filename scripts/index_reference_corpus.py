@@ -36,8 +36,8 @@ MEDLINEPLUS_ARTICLES = [
     },
     {
         "id": "iron_deficiency",
-        "url": "https://medlineplus.gov/irondeficiencyanemia.html",
-        "title": "Iron Deficiency Anemia",
+        "url": "https://medlineplus.gov/lab-tests/iron-tests/",
+        "title": "Iron Tests (Iron Deficiency Anemia)",
     },
     {
         "id": "diabetes",
@@ -61,7 +61,7 @@ MEDLINEPLUS_ARTICLES = [
     },
     {
         "id": "ldl",
-        "url": "https://medlineplus.gov/lab-tests/ldl-bad-cholesterol/",
+        "url": "https://medlineplus.gov/lab-tests/ldl-cholesterol/",
         "title": "LDL (Bad) Cholesterol",
     },
     {

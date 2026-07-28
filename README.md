@@ -1,174 +1,138 @@
 # Medical Report Intelligence Platform
 
-A production-quality medical report analysis platform that extracts structured clinical data from uploaded PDFs/images, explains findings in plain language, and answers follow-up questions with grounded, cited responses from both personal report data and trusted medical references.
+A production-quality medical report analysis platform that extracts structured clinical data from uploaded PDFs and images, explains findings in plain language, and answers follow-up questions with grounded, cited responses. It combines information from your personal report data with trusted medical references (like MedlinePlus and WHO).
+
+It exists to help patients quickly understand their medical reports, translating complex medical jargon into easy-to-understand explanations while highlighting critical or abnormal values, without relying on LLMs to make medical decisions.
+
+## Table of Contents
+- [Features](#features)
+- [Architecture](#architecture)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Tests](#tests)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| **OCR + Extraction** | Tesseract OCR → LangChain + PydanticOutputParser → strict JSON |
-| **Rule-based Flagging** | Python logic (never LLM) flags NORMAL / BORDERLINE / ABNORMAL / CRITICAL |
-| **Plain-language Summary** | LLM narrates pre-computed flagged findings |
-| **Hybrid RAG Q&A** | Retrieves from personal report store (A) + MedlinePlus/WHO reference store (B) |
-| **Retrieval Inspector** | Shows exact chunks retrieved from both stores *before* the LLM answer |
-| **Citation Grounding** | Every answer cites its sources inline |
-| **Refusal Guardrail** | LLM refuses to answer if no context is found in either store |
+- **OCR + Extraction:** Uses Tesseract OCR and LangChain to reliably extract structured data (JSON) from medical reports.
+- **Rule-based Flagging:** Uses pure Python logic (not LLMs) to accurately flag results as NORMAL, BORDERLINE, ABNORMAL, or CRITICAL.
+- **Plain-language Summary:** An LLM narrates and explains pre-computed flagged findings in easy-to-understand language.
+- **Hybrid RAG Q&A:** Retrieves context from a personal report store and a medical reference store (MedlinePlus/WHO) to answer questions.
+- **Retrieval Inspector:** See the exact chunks retrieved from both vector stores before the LLM generates an answer.
+- **Citation Grounding:** Every generated answer cites its sources inline.
+- **Guardrails:** Refuses to answer if no context is found, ensuring it doesn't hallucinate medical advice.
 
 ## Architecture
+The platform is split into a robust FastAPI Python backend and a modern React Vite frontend. 
+Data is extracted using OCR, parsed via LangChain, and queried using ChromaDB for Retrieval-Augmented Generation (RAG).
 
-```
-Upload (PDF/image)
-      │
-OCR (Tesseract) ──────── confidence check (warns if < 70%)
-      │
-LLM + PydanticOutputParser → strict ReportData JSON
-      │
-Rule-based flagging (Python) → NORMAL/BORDERLINE/ABNORMAL/CRITICAL
-      │
-LLM summary (narrates pre-computed flags only)
-      │
-   ┌─────────────────────────┐
-   │                         │
-SQLite (persist reports)   Chroma Store A (report chunks)
-                             │
-                           Chroma Store B (MedlinePlus/WHO — indexed once)
-                             │
-                    Hybrid retrieval + merge
-                             │
-                    LLM answer + inline citations
-                             │
-                    Streamlit UI (Retrieval Inspector)
-```
+## Installation
 
-## Guardrails
+### Prerequisites
+- **Python 3.10+**
+- **Node.js 18+** & **npm**
+- **Tesseract OCR:** 
+  - Windows: [Download installer](https://github.com/UB-Mannheim/tesseract/wiki)
+  - Linux: `sudo apt install tesseract-ocr`
+  - macOS: `brew install tesseract`
+- **Poppler** (for PDF support):
+  - Windows: [Download binaries](https://github.com/oschwartz10612/poppler-windows/releases) and add `bin/` to PATH.
+  - Linux: `sudo apt install poppler-utils`
+  - macOS: `brew install poppler`
 
-- **LLM never does arithmetic** — all flagging is pure Python comparisons
-- **LLM never decides what is abnormal** — it only narrates pre-computed statuses
-- **Refusal on empty context** — if neither store returns relevant chunks, the LLM refuses gracefully
-- **Critical value urgency** — CRITICAL flags (e.g., Hb < 7, HbA1c > 10) trigger an urgent banner
+### Setup Instructions
 
-## Project Structure
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/BLAZEERT123/medical-report-platform.git
+   cd medical-report-platform
+   ```
 
-```
-medical-report-platform/
-├── backend/
-│   ├── main.py                   # FastAPI entry point
-│   ├── config.py                 # Pydantic settings
-│   ├── models/report.py          # Strict Pydantic schemas
-│   └── services/
-│       ├── ocr_service.py        # Tesseract OCR + confidence
-│       ├── extraction_service.py # LLM + PydanticOutputParser
-│       ├── flagging_service.py   # Rule-based NORMAL/ABNORMAL logic
-│       ├── summary_service.py    # LLM plain-language explanation
-│       ├── store_service.py      # SQLite persistence
-│       ├── chroma_service.py     # ChromaDB (Store A + Store B)
-│       ├── qa_service.py         # Hybrid retrieval + answer
-│       └── llm_factory.py        # LLM/embedding factory
-├── frontend/app.py               # Streamlit UI
-├── scripts/
-│   ├── generate_sample_reports.py   # Create synthetic demo PDFs
-│   └── index_reference_corpus.py    # Index MedlinePlus/WHO into Store B
-├── tests/test_flagging.py        # Unit tests (rule-based logic)
-└── requirements.txt
-```
+2. **Setup the Backend:**
+   ```bash
+   # Create and activate virtual environment (optional but recommended)
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   
+   # Install dependencies
+   pip install -r requirements.txt
+   ```
 
-## Quick Start
-
-### 1. Prerequisites
-
-**Python 3.10+** required.
-
-Install [Tesseract OCR](https://github.com/UB-Mannheim/tesseract/wiki):
-- **Windows**: Download installer from [UB-Mannheim](https://github.com/UB-Mannheim/tesseract/wiki), install to `C:\Program Files\Tesseract-OCR`, add to PATH
-- **Linux**: `sudo apt install tesseract-ocr`
-- **macOS**: `brew install tesseract`
-
-Install [Poppler](https://poppler.freedesktop.org/) (for PDF support):
-- **Windows**: Download from [oschwartz10612/poppler-windows](https://github.com/oschwartz10612/poppler-windows/releases), add `bin/` to PATH
-- **Linux**: `sudo apt install poppler-utils`
-- **macOS**: `brew install poppler`
-
-### 2. Install dependencies
-
-```bash
-cd medical-report-platform
-pip install -r requirements.txt
-```
-
-### 3. Configure environment
-
-```bash
-cp .env.example .env
-# Edit .env and add your OpenAI API key:
-#   OPENAI_API_KEY=sk-...
-# Or use local embeddings (no key needed):
-#   EMBEDDING_PROVIDER=local
-```
-
-### 4. Generate sample reports
-
-```bash
-python scripts/generate_sample_reports.py
-# Creates 3 demo PDFs in backend/data/synthetic_reports/
-```
-
-### 5. Index the reference corpus (one-time)
-
-```bash
-python scripts/index_reference_corpus.py
-# Scrapes MedlinePlus + indexes static WHO/CDC guidelines into Chroma Store B
-# Requires internet access (~30 seconds)
-```
-
-### 6. Start the backend
-
-```bash
-# From project root
-python -m backend.main
-# OR
-uvicorn backend.main:app --reload --port 8000
-```
-
-### 7. Start the frontend
-
-```bash
-streamlit run frontend/app.py
-```
-
-Open **http://localhost:8501** in your browser.
-
-## Run Tests
-
-```bash
-# Unit tests for rule-based flagging (no API key needed)
-pytest tests/test_flagging.py -v
-```
+3. **Setup the Frontend:**
+   ```bash
+   cd frontend-web
+   npm install
+   ```
 
 ## Configuration
 
-Key settings in `.env`:
+1. Copy the example environment file in the root directory:
+   ```bash
+   cp .env.example .env
+   ```
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `OPENAI_API_KEY` | — | Required for LLM calls |
-| `EMBEDDING_PROVIDER` | `local` | `local` (no cost) or `openai` |
-| `LLM_MODEL` | `gpt-4o-mini` | Any OpenAI chat model |
-| `OCR_CONFIDENCE_THRESHOLD` | `70` | Below this → show warning |
-| `RETRIEVAL_TOP_K` | `3` | Chunks to retrieve per store |
+2. Edit the `.env` file with your configuration:
+   ```env
+   # Required for LLM usage
+   OPENAI_API_KEY=sk-your-openai-api-key
+   
+   # Or use 'local' to avoid OpenAI costs for embeddings
+   EMBEDDING_PROVIDER=local
+   
+   # Model selection (e.g. gpt-4o-mini)
+   LLM_MODEL=gpt-4o-mini
+   
+   # OCR threshold below which a warning is displayed
+   OCR_CONFIDENCE_THRESHOLD=70
+   ```
 
-## API Reference
+## Usage
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/reports/upload` | Upload PDF/image → structured JSON + summary |
-| `GET` | `/reports/` | List all stored reports |
-| `GET` | `/reports/{id}` | Get specific report |
-| `POST` | `/qa/ask` | Ask question → retrieval inspector + answer |
-| `GET` | `/qa/store-stats` | ChromaDB collection sizes |
-| `GET` | `/health` | Health check |
+You can easily get both the backend and frontend running using the available tools, or manually via the terminal.
 
-Interactive docs: **http://localhost:8000/docs**
+### 1. Initialize reference data (First time only)
+Generate synthetic reports and index reference corpora so the RAG has data to search against.
+```bash
+# From project root
+python scripts/generate_sample_reports.py
+python scripts/index_reference_corpus.py
+```
 
-## Resume Bullet
+### 2. Start the Backend
+```bash
+# From project root
+python -m backend.main
+# The API will be available at http://localhost:8000
+# Interactive docs at http://localhost:8000/docs
+```
 
-> Built an end-to-end medical report intelligence platform: extracts structured clinical data via OCR and Pydantic-enforced parsing, answers questions using a two-store hybrid RAG system (personal + trusted reference sources) with visible retrieval traces, computes flagging via rule-based Python logic (LLM never makes medical decisions), and generates grounded cited answers — using LangChain, FastAPI, ChromaDB, and Streamlit.
+### 3. Start the Frontend
+In a new terminal window:
+```bash
+cd frontend-web
+npm run dev
+# The React UI will be available at http://localhost:5173
+```
+
+Open the frontend URL in your browser, upload a PDF/Image of a medical report, and explore the extracted data, summary, and Q&A features.
+
+## Tests
+
+To run the unit tests for the rule-based flagging logic:
+```bash
+# From project root
+pytest tests/test_flagging.py -v
+```
+
+## Contributing
+We welcome contributions! Feel free to open issues or submit pull requests for enhancements, bug fixes, or new features.
+
+## License
+This project is licensed under the MIT License.
+
+## Acknowledgments
+- Tesseract OCR for text extraction
+- Streamlit (previous UI iteration) and React (current UI)
+- LangChain for RAG workflows

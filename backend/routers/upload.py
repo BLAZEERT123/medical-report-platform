@@ -116,6 +116,18 @@ async def list_reports():
     return store_service.list_reports()
 
 
+@router.get("/patients", response_model=List[str])
+async def get_unique_patients():
+    """Get a list of all unique patient names."""
+    return store_service.get_unique_patients()
+
+
+@router.get("/trends/{patient_name}", response_model=dict)
+async def get_patient_trends(patient_name: str):
+    """Get time-series trends for all tests of a specific patient."""
+    return store_service.get_patient_trends(patient_name)
+
+
 @router.get("/{report_id}", response_model=ReportData)
 async def get_report(report_id: int):
     """Retrieve a specific report by ID."""

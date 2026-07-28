@@ -140,3 +140,64 @@ def get_report_by_id(report_id: int) -> Optional[ReportData]:
     if row is None:
         return None
     return ReportData.model_validate_json(row.raw_json)
+
+
+def get_unique_patients() -> List[str]:
+    """Return a list of unique patient names from all reports."""
+    engine = get_engine()
+    with engine.connect() as conn:
+        rows = conn.execute(
+            select(reports_table.c.patient).distinct().order_by(reports_table.c.patient)
+        ).fetchall()
+    return [r[0] for r in rows if r[0]]
+
+
+def get_patient_trends(patient_name: str) -> dict:
+    """
+    Return time-series trend data for all tests of a given patient.
+    Format:
+    {
+        "patient": "John Doe",
+        "trends": {
+            "Hemoglobin": [
+                {"date": "2023-01-01", "value": 14.5, "unit": "g/dL", "status": "NORMAL"},
+                ...
+            ]
+        }
+    }
+    """
+    engine = get_engine()
+    
+    query = (
+        select(
+            reports_table.c.report_date,
+            test_results_table.c.test_name,
+            test_results_table.c.value,
+            test_results_table.c.unit,
+            test_results_table.c.status,
+        )
+        .select_from(reports_table.join(test_results_table, reports_table.c.id == test_results_table.c.report_id))
+        .where(reports_table.c.patient == patient_name)
+        .order_by(reports_table.c.report_date.asc())
+    )
+    
+    trends = {}
+    with engine.connect() as conn:
+        rows = conn.execute(query).fetchall()
+        
+    for row in rows:
+        test_name = row.test_name
+        if test_name not in trends:
+            trends[test_name] = []
+            
+        trends[test_name].append({
+            "date": row.report_date,
+            "value": row.value,
+            "unit": row.unit,
+            "status": row.status
+        })
+        
+    return {
+        "patient": patient_name,
+        "trends": trends
+    }
